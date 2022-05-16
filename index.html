@@ -1,4 +1,244 @@
-<!-- The video -->
-<video autoplay muted loop id="myVideo">
-  <source src="https://media4.giphy.com/media/V4NSR1NG2p0KeJJyr5/giphy.gif" type="photo/gif">
-</video>
+.main
+
+<style>
+  $bgcolor: #000
+$fgcolor: green
+
+body
+  .main
+    display: block
+    width: 100vw
+    height: 100vh
+    background-color: $bgcolor
+    color: $fgcolor
+  .lines
+    position: fixed
+    font-weight: bold
+    font-size: 16px
+    font-family: consolas
+    transform: rotate(270deg)
+    transition: transform 2s
+    width: 10px
+    div
+      display: block
+      height: 100%
+      width: 100%
+      position: absolute
+      background: linear-gradient(90deg, transparent 30%, black 100%)
+      
+</style>
+
+<script>
+  var main = document.querySelector(".main");
+//main.insertAdjacentHTML( 'beforeend', 'content' );
+
+var lineCount = 40;
+var minCharCount = 20;
+var maxCharCount = 40;
+var topPos = (maxCharCount - 1) / 2 * 10;
+var mainWidth = main.offsetWidth;
+var mainHeight = main.offsetHeight;
+
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
+function getLineChar(length) {
+  var result = "";
+  var characters = "01";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+function animate(index, charCount, opacity, potition, tick) {
+  var elem = document.querySelector("#line" + index);
+  var pos = -mainHeight;
+  var id = setInterval(frame, random(1, 10));
+  var lineChar = getLineChar(charCount);
+  var id2 = setInterval(function() {
+    var lineChar2 = getLineChar(charCount);
+    var textWidth = getTextWidth(lineChar2, "bold 16px Consolas");
+    elem.querySelector("span").innerHTML = lineChar2;
+    elem.querySelector("div").style.width = textWidth + "px";
+  }, tick);
+  function frame() {
+    var textWidth = getTextWidth(lineChar, "bold 16px Consolas");
+    if (pos == mainHeight + topPos) {
+      clearInterval(id);
+      clearInterval(id2);
+      elem.style.top = -mainHeight + "px";
+      animate(index, charCount, opacity, potition, tick);
+    } else {
+      pos++;
+      elem.style.top = pos + "px";
+    }
+  }
+}
+
+function generateLine(index, charCount, opacity, potition, tick) {
+  var html = "";
+  html += `<div class="lines" `;
+  html += `style="opacity:0.${opacity}; `;
+  html += `left:${position}px; `;
+  html += `top:-${topPos}px;" `;
+  html += `id="line${index}">`;
+  html += `<div>⠀</div>`;
+  html += `<span>${getLineChar(charCount)}<span>`;
+  html += `</div>`;
+  setTimeout(function() {
+    main.insertAdjacentHTML("beforeend", html);
+    animate(index, charCount, opacity, potition, tick);
+  }, tick + index * 100);
+}
+
+for (i = 0; i < lineCount; i++) {
+  var index = i;
+  var charCount = random(minCharCount, maxCharCount);
+  var opacity = random(6, 9);
+  var position = random(0, mainWidth);
+  var tick = random(300, 500);
+
+  generateLine(index, charCount, opacity, position, tick);
+}
+
+function getTextWidth(text, font) {
+  // re-use canvas object for better performance
+  var canvas =
+    getTextWidth.canvas ||
+    (getTextWidth.canvas = document.createElement("canvas"));
+  var context = canvas.getContext("2d");
+  context.font = font;
+  var metrics = context.measureText(text);
+  return metrics.width;
+}
+
+console.log(getTextWidth("hello there!", "bold 12px arial"));
+
+</script>
+
+HTML SCSS JSResult Skip Results Iframe
+EDIT ON
+<pre id="typewriter">
+<span class="var-highlight">var</span> object = {
+    name: <span class="string-highlight">'Cool'</span>,
+    type: <span class="string-highlight">'Kids'</span>,
+    location: <span class="string-highlight">'997'</span>,
+    properties:[<span class="string-highlight">'GitSite'</span>,
+                <span class="string-highlight">'HTML'</span>,
+                <span class="string-highlight">'CSS'</span>];
+}; </pre>
+
+
+
+Resources1× 0.5× 0.25×Rerun
+
+<style>
+  .var-highlight{
+  color: #C0AD60;
+}
+.string-highlight{
+  color: rgba(253, 149, 90, 0.8);
+}
+
+#typewriter{
+    font-size: 2em;
+    margin: 0;
+    font-family: "Courier New";
+
+    &:after{
+      content: "|";
+      animation: blink 500ms linear infinite alternate;
+    }
+}
+
+@-webkit-keyframes blink{
+  0%{opacity: 0;}
+  100%{opacity: 1;}
+}
+
+@-moz-keyframes blink{
+  0%{opacity: 0;}
+  100%{opacity: 1;}
+}
+
+@keyframes blink{
+  0%{opacity: 0;}
+  100%{opacity: 1;}
+}
+</style>
+
+<script>
+   function setupTypewriter(t) {
+      var HTML = t.innerHTML;
+
+      t.innerHTML = "";
+
+      var cursorPosition = 0,
+          tag = "",
+          writingTag = false,
+          tagOpen = false,
+          typeSpeed = 100,
+        tempTypeSpeed = 0;
+
+      var type = function() {
+        
+          if (writingTag === true) {
+              tag += HTML[cursorPosition];
+          }
+
+          if (HTML[cursorPosition] === "<") {
+              tempTypeSpeed = 0;
+              if (tagOpen) {
+                  tagOpen = false;
+                  writingTag = true;
+              } else {
+                  tag = "";
+                  tagOpen = true;
+                  writingTag = true;
+                  tag += HTML[cursorPosition];
+              }
+          }
+          if (!writingTag && tagOpen) {
+              tag.innerHTML += HTML[cursorPosition];
+          }
+          if (!writingTag && !tagOpen) {
+              if (HTML[cursorPosition] === " ") {
+                  tempTypeSpeed = 0;
+              }
+              else {
+                  tempTypeSpeed = (Math.random() * typeSpeed) + 50;
+              }
+              t.innerHTML += HTML[cursorPosition];
+          }
+          if (writingTag === true && HTML[cursorPosition] === ">") {
+              tempTypeSpeed = (Math.random() * typeSpeed) + 50;
+              writingTag = false;
+              if (tagOpen) {
+                  var newSpan = document.createElement("span");
+                  t.appendChild(newSpan);
+                  newSpan.innerHTML = tag;
+                  tag = newSpan.firstChild;
+              }
+          }
+
+          cursorPosition += 1;
+          if (cursorPosition < HTML.length - 1) {
+              setTimeout(type, tempTypeSpeed);
+          }
+
+      };
+
+      return {
+          type: type
+      };
+  }
+
+  var typer = document.getElementById('typewriter');
+
+  typewriter = setupTypewriter(typewriter);
+
+  typewriter.type();
+</script>
